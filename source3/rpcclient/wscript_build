@@ -48,6 +48,7 @@ bld.SAMBA3_BINARY('rpcclient',
                  RPC_NDR_DRSUAPI
                  RPC_NDR_NTSVCS
                  RPC_NDR_EVENTLOG
+                 RPC_NDR_EVENTLOG6
                  INIT_SAMR
                  RPC_NDR_FSRVP
                  RPC_NDR_CLUSAPI
