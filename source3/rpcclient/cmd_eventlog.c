@@ -22,6 +22,8 @@
 #include "rpcclient.h"
 #include "../librpc/gen_ndr/ndr_eventlog.h"
 #include "../librpc/gen_ndr/ndr_eventlog_c.h"
+#include "../librpc/gen_ndr/ndr_eventlog6.h"
+#include "../librpc/gen_ndr/ndr_eventlog6_c.h"
 #include "rpc_client/init_lsa.h"
 
 static NTSTATUS get_eventlog_handle(struct rpc_pipe_client *cli,
@@ -54,6 +56,107 @@ static NTSTATUS get_eventlog_handle(struct rpc_pipe_client *cli,
 
 	return result;
 }
+
+static NTSTATUS cmd_eventlog6_readlog(struct rpc_pipe_client *cli, TALLOC_CTX *mem_ctx, int argc, const char **argv)
+{
+	NTSTATUS status = NT_STATUS_OK;
+	NTSTATUS result = NT_STATUS_OK;
+
+	struct dcerpc_binding_handle *b = cli->binding_handle;
+	struct policy_handle handle, opcontrol;
+	uint32_t query_channel_info_size = 0;
+	struct eventlog6_EvtRpcQueryChannelInfo *query_channel_info = NULL;
+	struct eventlog6_RpcInfo rpc_info;
+	WERROR werror_result;
+
+	printf("Doing some voodoo stuff...\n");
+	status = dcerpc_eventlog6_EvtRpcRegisterLogQuery(
+		b,
+		mem_ctx,
+		"Security", // path
+		"*[System[(EventID=4768 or EventID=4769 or EventID=4770 or EventID=4624 or EventID=4634)]]", // query
+		0x00000201, // flags = read from newest to oldest
+		&handle,
+		&opcontrol,
+		&query_channel_info_size,
+		&query_channel_info,
+		&rpc_info,
+		&werror_result
+	);
+	if (!NT_STATUS_IS_OK(status))
+	{
+		printf("NTSTATUS 1\n");
+		return status;
+	}
+	if (!W_ERROR_IS_OK(werror_result))
+	{
+		printf("WERROR 1\n");
+		return NT_STATUS_PENDING;
+	}
+
+	uint32_t  request_count = 500;
+	uint32_t  event_data_count = 0;
+	uint32_t* event_data_indices = NULL;
+	uint32_t* event_data_sizes = NULL;
+	uint32_t  result_buffer_size = 0;
+	uint8_t*  result_buffer = NULL;
+
+	status = dcerpc_eventlog6_EvtRpcQueryNext(
+		b,
+		mem_ctx,
+		&handle,
+		request_count,
+		60000,               // time out = 60 sec
+		0,                   // flags sould be 0
+		&event_data_count,
+		&event_data_indices,
+		&event_data_sizes,
+		&result_buffer_size,
+		&result_buffer,
+		&werror_result
+	);
+
+	if (!NT_STATUS_IS_OK(status))
+	{
+		printf("NTSTATUS 2\n");
+		return status;
+	}
+	if (!W_ERROR_IS_OK(werror_result))
+	{
+		printf("WERROR 2\n");
+		return NT_STATUS_PENDING;
+	}
+
+	printf("Loaded %d events, %d bytes\n", event_data_count, result_buffer_size);
+
+	if (argc == 2)
+	{
+		printf("Writing to %s...\n", argv[1]);
+		FILE* pfile = fopen(argv[1],"wb");
+		fwrite(result_buffer,1,result_buffer_size,pfile);
+		fclose(pfile);
+	}
+
+	status = dcerpc_eventlog6_EvtRpcCancel(
+		b,
+		mem_ctx,
+		&opcontrol,
+		&werror_result
+	);
+	if (!NT_STATUS_IS_OK(status))
+	{
+		printf("NTSTATUS 3\n");
+		return status;
+	}
+	if (!W_ERROR_IS_OK(werror_result))
+	{
+		printf("WERROR 3\n");
+		return NT_STATUS_PENDING;
+	}
+
+	return result;
+}
+
 
 static NTSTATUS cmd_eventlog_readlog(struct rpc_pipe_client *cli,
 				     TALLOC_CTX *mem_ctx,

@@ -781,49 +781,49 @@ static struct cmd_set separator_command[] = {
 
 /* Various pipe commands */
 
-extern struct cmd_set lsarpc_commands[];
-extern struct cmd_set samr_commands[];
-extern struct cmd_set spoolss_commands[];
-extern struct cmd_set iremotewinspool_commands[];
-extern struct cmd_set netlogon_commands[];
-extern struct cmd_set srvsvc_commands[];
-extern struct cmd_set dfs_commands[];
-extern struct cmd_set ds_commands[];
-extern struct cmd_set echo_commands[];
-extern struct cmd_set epmapper_commands[];
-extern struct cmd_set shutdown_commands[];
-extern struct cmd_set test_commands[];
-extern struct cmd_set wkssvc_commands[];
-extern struct cmd_set ntsvcs_commands[];
-extern struct cmd_set drsuapi_commands[];
+// extern struct cmd_set lsarpc_commands[];
+// extern struct cmd_set samr_commands[];
+// extern struct cmd_set spoolss_commands[];
+// extern struct cmd_set iremotewinspool_commands[];
+// extern struct cmd_set netlogon_commands[];
+// extern struct cmd_set srvsvc_commands[];
+// extern struct cmd_set dfs_commands[];
+// extern struct cmd_set ds_commands[];
+// extern struct cmd_set echo_commands[];
+// extern struct cmd_set epmapper_commands[];
+// extern struct cmd_set shutdown_commands[];
+// extern struct cmd_set test_commands[];
+// extern struct cmd_set wkssvc_commands[];
+// extern struct cmd_set ntsvcs_commands[];
+// extern struct cmd_set drsuapi_commands[];
 extern struct cmd_set eventlog_commands[];
-extern struct cmd_set winreg_commands[];
-extern struct cmd_set fss_commands[];
-extern struct cmd_set witness_commands[];
-extern struct cmd_set clusapi_commands[];
+// extern struct cmd_set winreg_commands[];
+// extern struct cmd_set fss_commands[];
+// extern struct cmd_set witness_commands[];
+// extern struct cmd_set clusapi_commands[];
 
 static struct cmd_set *rpcclient_command_list[] = {
 	rpcclient_commands,
-	lsarpc_commands,
-	ds_commands,
-	samr_commands,
-	spoolss_commands,
-	iremotewinspool_commands,
-	netlogon_commands,
-	srvsvc_commands,
-	dfs_commands,
-	echo_commands,
-	epmapper_commands,
-	shutdown_commands,
- 	test_commands,
-	wkssvc_commands,
-	ntsvcs_commands,
-	drsuapi_commands,
+	// lsarpc_commands,
+	// ds_commands,
+	// samr_commands,
+	// spoolss_commands,
+	// iremotewinspool_commands,
+	// netlogon_commands,
+	// srvsvc_commands,
+	// dfs_commands,
+	// echo_commands,
+	// epmapper_commands,
+	// shutdown_commands,
+	// test_commands,
+	// wkssvc_commands,
+	// ntsvcs_commands,
+	// drsuapi_commands,
 	eventlog_commands,
-	winreg_commands,
-	fss_commands,
-	witness_commands,
-	clusapi_commands,
+	// winreg_commands,
+	// fss_commands,
+	// witness_commands,
+	// clusapi_commands,
 	NULL
 };
 
@@ -867,6 +867,11 @@ static NTSTATUS do_cmd(struct cli_state *cli,
 	}
 
 	/* Open pipe */
+
+	// Command line settings: "transport NCACN_IP_TCP; sign"
+	// default_transport = NCACN_IP_TCP;
+	// pipe_default_auth_level = DCERPC_AUTH_LEVEL_INTEGRITY;
+	// pipe_default_auth_type = DCERPC_AUTH_TYPE_NTLMSSP;
 
 	if ((cmd_entry->table != NULL) && (cmd_entry->rpc_pipe == NULL)) {
 		enum credentials_use_kerberos use_kerberos = CRED_AUTO_USE_KERBEROS;

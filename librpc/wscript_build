@@ -577,6 +577,11 @@ bld.SAMBA_SUBSYSTEM('RPC_NDR_EVENTLOG',
     public_deps='dcerpc-binding ndr-standard'
     )
 
+bld.SAMBA_SUBSYSTEM('RPC_NDR_EVENTLOG6',
+    source='gen_ndr/ndr_eventlog6_c.c',
+    public_deps='dcerpc-binding ndr-standard'
+    )
+
 bld.SAMBA_SUBSYSTEM('RPC_NDR_EPMAPPER',
     source='gen_ndr/ndr_epmapper_c.c',
     public_deps='tevent NDR_EPMAPPER'
