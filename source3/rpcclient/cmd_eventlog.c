@@ -665,6 +665,7 @@ static NTSTATUS cmd_eventlog_loginfo(struct rpc_pipe_client *cli,
 
 struct cmd_set eventlog_commands[] = {
 	{ "EVENTLOG" },
+	{ "eventlog6_readlog",		RPC_RTYPE_NTSTATUS,	cmd_eventlog6_readlog,		NULL,	&ndr_table_eventlog6,	NULL,	"Read Eventlog6", "" },
 	{ "eventlog_readlog",		RPC_RTYPE_NTSTATUS,	cmd_eventlog_readlog,		NULL,	&ndr_table_eventlog,	NULL,	"Read Eventlog", "" },
 	{ "eventlog_numrecord",		RPC_RTYPE_NTSTATUS,	cmd_eventlog_numrecords,	NULL,	&ndr_table_eventlog,	NULL,	"Get number of records", "" },
 	{ "eventlog_oldestrecord",	RPC_RTYPE_NTSTATUS,	cmd_eventlog_oldestrecord,	NULL,	&ndr_table_eventlog,	NULL,	"Get oldest record", "" },
