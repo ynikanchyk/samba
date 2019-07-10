@@ -1,0 +1,10 @@
+RPCCLIENT_DIR=./source3/rpcclient
+SOURCES=$(RPCCLIENT_DIR)/rpcclient.c
+INCLUDES=-I ./source3/include -I ./lib/replace
+CC=gcc
+CFLAGS=-O0 $(INCLUDES)
+
+all: rpcclient
+
+rpcclient: $(SOURCES)
+	$(CC) $(CFLAGS) $(SOURCES)
